@@ -1,0 +1,263 @@
+/* ========== TEMI (light + dark) ========== */
+
+:root {
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --text: #111827;
+  --primary: #2563eb;
+  --ring: rgba(37,99,235,0.25);
+  --border: #e5e7eb;
+  --best: #10b981;
+  --error: #ef4444;
+}
+
+/* Tema scuro */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --muted: #94a3b8;
+  --text: #f1f5f9;
+  --primary: #3b82f6;
+  --ring: rgba(59,130,246,0.35);
+  --border: #334155;
+  --best: #10b981;
+  --error: #ef4444;
+}
+
+/* Reset globale */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+.app-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.app-header {
+  margin-bottom: 12px;
+  text-align: center;
+}
+.app-header h1 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--primary);
+}
+.subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+}
+
+main, .stack, .content, .container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─────────── Cards ─────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.card h3 {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  color: var(--primary);
+}
+.card h4 {
+  margin: 8px 0 6px 0;
+  font-size: 14px;
+}
+.mt-16 { margin-top: 16px; }
+
+/* ─────────── Results ─────────── */
+.results-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 1200px) {
+  .results-grid { grid-template-columns: 1fr 1fr; }
+}
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.result-card.best { outline: 2px solid var(--best); }
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.result-header h4 { margin: 0; font-size: 14px; }
+.meta { color: var(--muted); }
+.badge {
+  background: var(--best);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+/* ─────────── Confusion Matrix ─────────── */
+.cm-card {
+  width: 100%;
+  height: 320px;
+  margin-top: 10px;
+  background: #0b1220;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.cm-wrapper {
+  width: 100%;
+  height: 100%;
+}
+.cm-wrapper canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ─────────── Tabelle ─────────── */
+.preview-table, .report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.preview-table th, .preview-table td,
+.report-table th, .report-table td {
+  border: 1px solid var(--border);
+  padding: 6px 8px;
+}
+.preview-table th {
+  background: #1a2333;
+  color: var(--primary);
+}
+.report-table th, .report-table td {
+  text-align: right;
+}
+.report-table th:first-child, .report-table td:first-child {
+  text-align: left;
+}
+.report-table .sep td { border: 0; height: 8px; }
+
+/* ─────────── Bottoni ─────────── */
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0;
+}
+button {
+  background: var(--primary);
+  color: #fff;
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0,0,0,.4);
+  transition: background 0.2s ease;
+}
+button:hover {
+  background: #2563eb;
+}
+button.secondary {
+  background: #334155;
+  color: #f1f5f9;
+}
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+button:focus {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* ─────────── Spinner ─────────── */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #334155;
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─────────── Callout Miglior Modello ─────────── */
+.best-callout {
+  border-left: 4px solid var(--best);
+  padding: 10px 12px;
+  background: #0b1220;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+.best-callout strong {
+  color: var(--best);
+}
+
+/* ─────────── Error Boundary ─────────── */
+.error-card {
+  background: #1e1e1e;
+  border: 1px solid var(--error);
+  border-radius: 10px;
+  padding: 16px;
+  color: var(--error);
+}
+
+/* ─────────── Footer ─────────── */
+.app-footer {
+  margin: 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.theme-toggle {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+  transition: background .2s, color .2s;
+}
+.theme-toggle:hover {
+  background: var(--primary);
+  color: #fff;
+}

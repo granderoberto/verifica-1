@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+dist/
+build/
+*.egg-info/
+
+# Node
+node_modules/
+dist/
+.cache/
+.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Models/exports
+exports/
+*.pkl
+*.joblib
+*.json
+!package.json
