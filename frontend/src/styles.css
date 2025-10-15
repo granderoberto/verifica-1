@@ -342,3 +342,143 @@ button.secondary {
   border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
 }
 button.secondary:disabled { opacity: .5; cursor: not-allowed; }
+.kv-table { width: 100%; border-collapse: collapse; }
+.kv-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); }
+.kv-table td:first-child { width: 48%; color: var(--muted); }
+.results-grid.vertical { display: grid; gap: 16px; }
+/* Confusion Matrix */
+.cm-wrapper { display:flex; flex-direction:column; gap:8px; }
+.cm-header { display:flex; justify-content:space-between; align-items:center; }
+.cm-sub { opacity:.8; margin-left:6px; }
+
+.cm-controls .switch { display:flex; gap:8px; align-items:center; font-size:14px; opacity:.9; }
+
+.cm-scroll {
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background: var(--card);
+  max-height: 560px;
+}
+
+/* Tabella */
+.cm-table { width:100%; border-collapse: separate; border-spacing:0; min-width:720px; }
+.cm-table th, .cm-table td { border-bottom:1px solid var(--border); padding:8px 10px; }
+.cm-table thead th { position: sticky; top: 0; z-index:2; background: var(--card); text-align:left; }
+.cm-table .stuck { position: sticky; top:0; z-index:3; }
+.cm-table .stuck-y { position: sticky; left:0; z-index:3; background: var(--card); text-align:left; }
+.cm-table .corner { left:0; z-index:4; }
+.cm-table .total { font-weight:600; background: rgba(255,255,255,.03); }
+.cm-table tbody tr:nth-child(even) td { background-clip: padding-box; }
+.cm-table tbody tr:hover td { outline:1px solid rgba(255,255,255,.08); outline-offset:-1px; }
+
+.cm-table td .cell { display:flex; flex-direction:column; gap:2px; align-items:flex-end; }
+.cm-table td .count { font-weight:600; }
+.cm-table td .perc { font-size:12px; opacity:.9; }
+
+.cm-empty { opacity:.8; font-style:italic; }
+
+.cm-axes {
+  display:flex; justify-content:space-between; font-size:12px; opacity:.75;
+  padding:2px 2px 0 2px;
+}
+/* Contenitori principali */
+.app-shell, .stack, .card, .result-card, .cm-card {
+  box-sizing: border-box;
+}
+
+/* Le card non fanno “sbordare” i contenuti */
+.card, .result-card {
+  overflow: hidden;          /* taglia effetti fuori card */
+}
+
+/* Wrapper standard per grafici/heatmap */
+.chart-box, .cm-card, .cm-scroll {
+  max-width: 100%;
+  overflow: auto;            /* scroll se serve (x e y) */
+}
+
+/* Canvas responsive (Chart.js) */
+.chart-box canvas,
+.result-card canvas {
+  display: block;
+  max-width: 100% !important;
+  height: auto !important;   /* evita altezza fissa */
+}
+
+/* Confusion Matrix (tabella) */
+.cm-scroll {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  /* Importante: lasciare che scrolli orizzontalmente su schermi stretti */
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
+.cm-table {
+  width: 100%;
+  min-width: 720px;     /* permette lo scroll orizzontale su mobile */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cm-table thead th,
+.cm-table .stuck-y {
+  background: var(--card);
+}
+
+/* Se usi grid per i risultati, evita che stringa troppo le card */
+.results-grid,
+.results-grid.vertical {
+  grid-template-columns: 1fr;   /* una colonna: niente tagli */
+}
+
+/* Limita larghezze estreme e centra il contenuto */
+.app-shell main,
+.app-shell .card {
+  max-width: 1200px;
+  margin-inline: auto;
+}
+/* Box model coerente */
+.app-shell, .stack, .card, .result-card, .cm-card, .scroll-x { box-sizing: border-box; }
+
+/* Card generiche */
+.card { overflow: hidden; }
+.card--full { max-width: 1200px; margin-inline: auto; }
+
+/* Stack verticale per lo step risultati */
+.results-stack { display: flex; flex-direction: column; gap: 16px; }
+
+/* Griglia risultati: una colonna per evitare stringimenti */
+.results-grid,
+.results-grid.vertical { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+/* Card singolo modello */
+.result-card { overflow: hidden; }
+
+/* Wrapper scrollabile orizzontale (tabelle larghe) */
+.scroll-x { overflow-x: auto; overflow-y: hidden; }
+.scroll-x table { min-width: 720px; }
+
+/* Confusion matrix container (già robusta) */
+.cm-card { max-width: 100%; overflow: hidden; }
+.cm-scroll { max-width: 100%; overflow: auto; }
+
+/* Tabelle */
+.report-table, .kv-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.report-table th, .report-table td,
+.kv-table td {
+  border-bottom: 1px solid var(--border);
+  padding: 8px 10px;
+}
+.kv-table td:first-child { width: 48%; color: var(--muted); }
+
+/* Utilities */
+.mt-16 { margin-top: 16px; }
+.row.wrap { flex-wrap: wrap; }
+.row.gap { gap: 8px; }
+.section-header { padding-bottom: 8px; }

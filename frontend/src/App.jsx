@@ -191,7 +191,7 @@ export default function App() {
 
         {/* STEP 2: Risultati */}
         {step === 2 && (
-          <section>
+          <section className="card card--full">
             <ResultsBoard
               results={results}
               best={best}
@@ -201,12 +201,13 @@ export default function App() {
               onDownloadMetadata={onDownloadMetadata}
               loading={loading}
             />
-            <div className="row between">
+
+            <div className="row between mt-16">
               <button className="secondary" onClick={() => setStep(1)}>← Torna ai parametri</button>
               <button onClick={onReset} disabled={loading}>Nuovo run</button>
             </div>
           </section>
-        )}
+        )}        
         <LoadingOverlay visible={loading} />
       </main>
 

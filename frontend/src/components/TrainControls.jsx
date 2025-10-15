@@ -24,7 +24,7 @@ export default function TrainControls({ cv, setCv, search, setSearch, useClassWe
       <div className="row">
         <button onClick={onTrain} disabled={loading}>Addestra</button>
       </div>
-      {loading && <div className="spinner">⏳ Addestramento in corso...</div>}
+      {loading && <div className="row">⏳ Addestramento in corso...</div>}
     </div>
   )
 }
