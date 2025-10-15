@@ -23,6 +23,14 @@ export default function ModelSelector({ target, setTarget, selectedModels, setSe
           {columns.map(c => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
+      <div className="row" style={{ marginTop: 6 }}>
+      <button className="secondary" onClick={() => setSelectedModels(['logreg','dt'])}>
+        Preset: Veloce (LR + DT)
+      </button>
+      <button className="secondary" onClick={() => setSelectedModels(['logreg','svc','knn','dt','rf','nb'])}>
+        Preset: Completo (tutti)
+      </button>
+    </div>
       <div className="row wrap">
         {MODEL_OPTIONS.map(m => (
           <label key={m.key} className="chip">

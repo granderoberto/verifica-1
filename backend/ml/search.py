@@ -217,3 +217,28 @@ def export_model(run_id: str):
         json.dump(meta, f, ensure_ascii=False, indent=2)
 
     return pkl_path, json_path
+
+# Deve esistere già qualcosa tipo: RUNS = {}
+# Se è un oggetto custom, lascia com’è.
+
+def reset_runs():
+    """Svuota l'archivio dei run, indipendentemente dall'implementazione interna."""
+    try:
+        # se RUNS è un dict o espone clear()
+        RUNS.clear()  # type: ignore[attr-defined]
+        return
+    except Exception:
+        pass
+
+    # fallback per implementazioni custom: RUNS.store (dict interno)
+    if hasattr(RUNS, "store") and isinstance(RUNS.store, dict):  # type: ignore[attr-defined]
+        RUNS.store.clear()  # type: ignore[attr-defined]
+        return
+
+    # ultimo fallback: rimpiazza le chiavi se è mappabile
+    try:
+        for k in list(RUNS.keys()):  # type: ignore[attr-defined]
+            del RUNS[k]  # type: ignore[index]
+    except Exception:
+        # se proprio non è gestibile, ignora
+        pass

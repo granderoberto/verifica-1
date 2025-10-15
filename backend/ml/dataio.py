@@ -37,11 +37,36 @@ def trim_strings(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    # Deduplica e trim stringhe
+    """
+    Pulizia leggera (pre-imputazione):
+    - trim stringhe
+    - deduplica
+    - normalizza token di missing in NaN (unknown, na, ?, stringa vuota)
+    - forza il tipo numerico sulle colonne numeriche (valori non validi -> NaN)
+    - rimuove eventuali colonne costanti
+    Nota: l'imputazione dei NaN è delegata alla Pipeline (SimpleImputer).
+    """
     df2 = trim_strings(df)
     df2 = df2.drop_duplicates().reset_index(drop=True)
-    return df2
 
+    # 1) normalizza missing comuni
+    missing_tokens = ["unknown", "Unknown", "UNKWN", "na", "NA", "NaN", "?", ""]
+    df2 = df2.replace(missing_tokens, pd.NA)
+
+    # 2) forza tipo numerico sulle colonne dichiarate numeriche (se esistono nel DF)
+    for col in NUMERIC_COLS:
+        if col in df2.columns:
+            df2[col] = pd.to_numeric(df2[col], errors="coerce")
+
+    # 3) rimuovi colonne costanti (stessa singola modalità)
+    nunique = df2.nunique(dropna=False)
+    constant_cols = nunique[nunique <= 1].index.tolist()
+    # tieni il target anche se costante, per sicurezza
+    constant_cols = [c for c in constant_cols if c not in (TARGET_DEFAULT,)]
+    if constant_cols:
+        df2 = df2.drop(columns=constant_cols, errors="ignore")
+
+    return df2
 
 def get_feature_sets(df: pd.DataFrame) -> Tuple[List[str], List[str]]:
     nums = [c for c in NUMERIC_COLS if c in df.columns]
@@ -59,10 +84,30 @@ def load_default_or_raise() -> pd.DataFrame:
 
 
 def preview_records(df: pd.DataFrame, limit: int = 5) -> Dict:
-    df_prev = df.head(limit)
+    # escludi colonne vietate (es. Id), poi pulisci
+    df_view = exclude_columns(df)
+    df_view = clean_dataframe(df_view)
+
+    df_prev = df_view.head(limit)
     return {
-        "rows": len(df),
-        "cols": len(df.columns),
+        "rows": len(df_view),
+        "cols": len(df_view.columns),
         "preview": df_prev.to_dict(orient="records"),
-        "columns": list(df.columns),
+        "columns": list(df_view.columns),
     }
+
+# === Helper comodi per “leggi → escludi → pulisci” ===
+def read_and_prepare_from_file(path: str = str(DEFAULT_DATASET_PATH), xpath: str = ".//row") -> pd.DataFrame:
+    with open(path, "rb") as f:
+        df = pd.read_xml(f, xpath=xpath)
+    df = exclude_columns(df)
+    df = clean_dataframe(df)
+    return df
+
+
+def read_and_prepare_from_bytes(data: bytes, xpath: str = ".//row") -> pd.DataFrame:
+    buf = io.BytesIO(data)
+    df = pd.read_xml(buf, xpath=xpath)
+    df = exclude_columns(df)
+    df = clean_dataframe(df)
+    return df
