@@ -292,3 +292,53 @@ button:focus {
   box-shadow: 0 8px 30px rgba(0,0,0,.6);
   display: flex; align-items: center;
 }
+.preview-wrapper { display: flex; flex-direction: column; gap: 8px; }
+
+.preview-toolbar {
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 8px; flex-wrap: wrap;
+}
+
+.preview-meta .muted { opacity: .7; }
+
+.preview-actions { display: flex; gap: 8px; align-items: center; }
+.preview-actions .inline select {
+  background: var(--card); color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px; padding: 4px 8px;
+}
+
+.table-scroll {
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--card);
+  max-height: 420px; /* header sticky funziona dentro questo container */
+}
+
+/* Tabella */
+.data-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  min-width: 680px; /* per consentire lo scroll orizzontale su schermi stretti */
+}
+
+.data-table thead th {
+  position: sticky; top: 0; z-index: 1;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  text-align: left; font-weight: 600;
+  padding: 10px; white-space: nowrap; cursor: pointer;
+}
+
+.data-table tbody td {
+  padding: 10px; border-bottom: 1px solid var(--border);
+  max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.data-table tbody tr:nth-child(even) td { background: rgba(255,255,255,.02); }
+.data-table tbody tr:hover td { background: rgba(255,255,255,.04); }
+
+button.secondary {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px;
+}
+button.secondary:disabled { opacity: .5; cursor: not-allowed; }

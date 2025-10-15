@@ -1,62 +1,71 @@
-const base = '' // proxied by Vite to http://localhost:8000
+// frontend/src/api.js
+// ===================
 
 export async function uploadXML(fileOrNull) {
-  const form = new FormData()
-  if (fileOrNull) form.append('file', fileOrNull)
-  const res = await fetch(`${base}/api/upload-xml`, {
-    method: 'POST',
-    body: fileOrNull ? form : null
-  })
-  if (!res.ok) throw new Error((await res.json()).detail || 'Errore upload')
-  return res.json()
+  // Se c'è un file → invia multipart a /api/upload-xml
+  if (fileOrNull) {
+    const formData = new FormData()
+    formData.append('file', fileOrNull)
+    const resp = await fetch('/api/upload-xml', { method: 'POST', body: formData })
+    const data = await resp.json().catch(() => ({}))
+    if (!resp.ok) throw new Error(data?.error || 'Errore upload')
+    return data
+  }
+
+  // Nessun file → usa direttamente la preview del DF attivo
+  // (_get_active_df() in backend carica il dataset di default se vuoto)
+  return await getPreview(5)
 }
 
-export async function getPreview(limit=5) {
-  const res = await fetch(`${base}/api/preview?limit=${limit}`)
-  if (!res.ok) throw new Error((await res.json()).detail || 'Errore preview')
-  return res.json()
+export async function getPreview(limit = 5) {
+  const resp = await fetch(`/api/preview?limit=${limit}`)
+  const data = await resp.json()
+  if (!resp.ok) throw new Error(data?.error || `Errore HTTP ${resp.status}`)
+  return data
 }
 
 export async function trainModels(payload) {
-  const res = await fetch(`${base}/api/train`, {
+  const resp = await fetch('/api/train', {
     method: 'POST',
-    headers: {'Content-Type':'application/json'},
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   })
-  if (!res.ok) throw new Error((await res.json()).detail || 'Errore training')
-  return res.json()
+  const data = await resp.json().catch(() => ({}))
+  if (!resp.ok) throw new Error(data?.error || `Errore HTTP ${resp.status}`)
+  return data
 }
 
 export async function resetState() {
-  const res = await fetch(`${base}/api/reset`, { method: 'POST' })
-  if (!res.ok) throw new Error('Errore reset')
-  return res.json()
+  const resp = await fetch('/api/reset', { method: 'POST' })
+  const data = await resp.json()
+  if (!resp.ok) throw new Error(data?.error || 'Errore reset')
+  return data
 }
 
-export async function downloadModel(runId) {
-  const res = await fetch(`${base}/api/download/model?run_id=${runId}`)
-  if (!res.ok) throw new Error('Download modello fallito')
-  const blob = await res.blob()
+export async function downloadModel(run_id) {
+  const resp = await fetch(`/api/download/model?run_id=${run_id}`)
+  if (!resp.ok) throw new Error('Errore download modello')
+  const blob = await resp.blob()
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `best_model_${runId}.pkl`
+  a.download = `best_model_${run_id}.pkl`
   document.body.appendChild(a)
   a.click()
-  a.remove()
+  document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
 
-export async function downloadMetadata(runId) {
-  const res = await fetch(`${base}/api/download/metadata?run_id=${runId}`)
-  if (!res.ok) throw new Error('Download metadata fallito')
-  const blob = await res.blob()
+export async function downloadMetadata(run_id) {
+  const resp = await fetch(`/api/download/metadata?run_id=${run_id}`)
+  if (!resp.ok) throw new Error('Errore download metadata')
+  const blob = await resp.blob()
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `metadata_${runId}.json`
+  a.download = `metadata_${run_id}.json`
   document.body.appendChild(a)
   a.click()
-  a.remove()
+  document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
